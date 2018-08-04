@@ -117,7 +117,7 @@ class SerialMonitorGui:
             try:
                 while(self.isConnected == True):
                     print("Scanning")
-                    if(self.serialComs.isAvailable() == True):
+                    if(self.serialComs.isOpen() == True):
                         message = self.serialComs.read()
                         print(message)
                         self.listbox.insert(END,message)
