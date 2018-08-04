@@ -1,9 +1,23 @@
+
+"""
+Made by Jeremy Dunne on 8/4/2018
+Essentially a copy of the arduino serial monitor
+adding new features to make it more effective
+
+New Features to add
+    1. Save output to a file
+    2. Arrow keys to repeat previous sends
+    3.
+"""
+
 import serial
 import sys
 import _thread
 from tkinter import *
 
 
+
+# Class for simple serial handling
 class ArduinoCommunicator():
     def __init__(self, port, baud = 115200):
         self.ser = serial.Serial(port, baud)
@@ -11,7 +25,7 @@ class ArduinoCommunicator():
     def read(self):
         return self.ser.readline().decode('utf-8')
 
-    def isAvailable(self):
+    def isOpen(self):
         return self.ser.isOpen()
 
     def write(self, data):
@@ -20,7 +34,7 @@ class ArduinoCommunicator():
     def close(self):
         self.ser.close()
 
-
+# Tkinter gui and thread handler
 class SerialMonitorGui:
     serialComs = 0
     def __init__(self,master):
@@ -31,9 +45,12 @@ class SerialMonitorGui:
         self.root.bind("<Return>",self.handleSend)
 
     def createGui(self):
+        #create the three main frames to use
         self.writingFrame = Frame(self.root)
         self.monitorFrame = Frame(self.root)
         self.connectionFrame = Frame(self.root)
+
+        #give the appropriate weights to columns/rows/grids
         self.writingFrame.pack(fill=BOTH, side = TOP)
         self.writingFrame.columnconfigure(0,weight=1)
         self.toSendLabel = Button(self.writingFrame,text="Send:", command = self.handleSend)
@@ -41,6 +58,8 @@ class SerialMonitorGui:
         self.writingFrame.columnconfigure(1,weight=9)
         self.textEntry = Entry(self.writingFrame)
         self.textEntry.grid(row=0,column=1,sticky=E+W)
+
+        #give the appropriate weights to columns/rows/grids
         self.monitorFrame.pack(expand=True, fill=BOTH)
         self.monitorFrame.columnconfigure(0,weight=9)
         self.monitorFrame.columnconfigure(1,weight=1)
@@ -51,6 +70,8 @@ class SerialMonitorGui:
         self.listbox.grid(row = 0, column = 0,sticky=N+S+E+W)
         self.listbox.config(yscrollcommand=self.scrollbar.set)
         self.scrollbar.config(command=self.listbox.yview)
+
+        #give the appropriate weights to columns/rows/grids
         self.connectionFrame.pack(side=BOTTOM)
         self.portVar = StringVar(self.root)
         self.baudVar = StringVar(self.root)
